@@ -1,6 +1,8 @@
 from django.shortcuts import render,HttpResponse,redirect
 import pymysql
 # Create your views here.
+
+# 链接zh_bms_cms库
 def shujuku_app():
     conn = pymysql.connect(
     host='192.168.2.96',  #主机地址，若是自己的主机也可以用'localhost'
@@ -13,6 +15,7 @@ def shujuku_app():
     )
     return conn
 
+# 链接db_weizhan库
 def shujuku_h5():
     conn = pymysql.connect(
     host='192.168.2.96',  #主机地址，若是自己的主机也可以用'localhost'
@@ -31,6 +34,24 @@ def login(request):
 # 主页
 def base(request):
     return render(request,'base.html')
+
+
+# 解密h5中的加密字段
+import pyDes
+import base64
+Key = 'national'
+Iv = None
+def hexStringTobytes(str):
+    '''
+    16进制转bytes
+    '''
+    str = str.replace(" ", "")
+    return bytes.fromhex(str)
+# 解密
+def decrypt_str(data):
+    method = pyDes.des(Key, pyDes.ECB, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    k =hexStringTobytes(data)
+    return method.decrypt(k)
 
 
 
@@ -56,31 +77,37 @@ def login(request):
         else:
             return HttpResponse('登陆失败')    
 
+# 获取app的验证码
 def yanzhengma_app():
     conn = shujuku_app() #链接数据库
     cur2 = conn.cursor(cursor = pymysql.cursors.DictCursor) # 将查询出来的结果制作成字典的形式返回
-    cur2.execute('SELECT * from tb_message ORDER BY update_time DESC LIMIT 3;')
+    cur2.execute('SELECT * from tb_message ORDER BY update_time DESC LIMIT 5;')
     all = cur2.fetchall()   # 获取剩余结果的所有数据
     list1 = []
     for j in all :
-        # print('剩余结果的全部',j)
         list1.append(j)  
-    # print(list1[0]['captcha'])
-    # print(list1[1])
-    # print(list1[2])
+    # print(list1[0]['update_time'])
+    # print(type(list1[0]['update_time']))
     return list1
+
+# 获取h5的验证码
 def yanzhengma_h5():
     conn = shujuku_h5() #链接数据库
     cur2 = conn.cursor(cursor = pymysql.cursors.DictCursor) # 将查询出来的结果制作成字典的形式返回
-    cur2.execute('SELECT * FROM tb_wmp_auth_mobile ORDER BY update_date DESC LIMIT 3;')
+    cur2.execute('SELECT * FROM tb_wmp_auth_mobile ORDER BY update_date DESC LIMIT 5;')
     all = cur2.fetchall()   # 获取剩余结果的所有数据
     list2 = []
     for j in all :
-        print('剩余结果的全部',j)
-        list2.append(j)  
+        # print('剩余结果的全部',j)
+        list2.append(j) 
+
+    # print(list2[0])
+    # print(len(list2))
+    for i in range(len(list2)):
+        list2[i]['encrypt_mobile'] = decrypt_str(list2[i]['encrypt_mobile'])
+        # print(list2[i].encrypt_mobile)     
     # print(list1[0]['captcha'])
-    # print(list1[1])
-    # print(list1[2])
+
     return list2
 
 # 获取验证码
