@@ -29,8 +29,8 @@ def shujuku_h5():
     return conn
 
 # 登陆
-def login(request):
-    return(request,'login.html')
+# def login(request):
+#     return(request,'login.html')
 # 主页
 def base(request):
     return render(request,'base.html')
@@ -59,13 +59,13 @@ def login(request):
     method = request.method
     # 根据方法不同 确定是请求界面 还是 表达提交
     if method == 'GET':
-        print('================================request请求的方法')
-        print('请求方法', request.method)
-        print('请求的 GET参数的类字典对象',request.GET)
-        print('请求的 POST参数的类字典对象',request.POST)
-        print('请求体',request.body)
-        print('请求头',request.META)
-        print('========================================')
+        # print('================================request请求的方法')
+        # print('请求方法', request.method)
+        # print('请求的 GET参数的类字典对象',request.GET)
+        # print('请求的 POST参数的类字典对象',request.POST)
+        # print('请求体',request.body)
+        # print('请求头',request.META)
+        # print('========================================')
         return render(request,'login.html')
     elif method == 'POST':
         username = request.POST.get('username')
@@ -113,6 +113,8 @@ def yanzhengma_h5():
 # 获取验证码
 def app1base(request):
     method = request.method
+    count = request.POST.get('count')
+    print(count)
     if method == 'GET':
         list1 = yanzhengma_app()
         list2 = yanzhengma_h5()
