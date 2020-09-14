@@ -21,7 +21,7 @@ from app1 import views as app1_views, urls as app1_app1
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
-    url(r'^login/', app1_views.login),
+    url(r'^login/', app1_views.login,name='login'),
     url(r'^base/', app1_views.base),
     # url(r'^login/', app1_views.login),
 

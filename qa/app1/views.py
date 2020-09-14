@@ -28,10 +28,20 @@ def shujuku_h5():
     )
     return conn
 
-# 登陆
-# def login(request):
-#     return(request,'login.html')
+# 装饰器
+def wrapper(f):
+    def inner(request,*args,**kwargs):
+        ret = f(request,*args,**kwargs)
+        cook = request.COOKIES.get('k1')
+        if cook == 'v1':
+            return ret
+        else:
+            return redirect('login')
+    return inner
+
+
 # 主页
+@wrapper
 def base(request):
     return render(request,'base.html')
 
@@ -54,7 +64,6 @@ def decrypt_str(data):
     return method.decrypt(k)
 
 
-
 def login(request):
     method = request.method
     # 根据方法不同 确定是请求界面 还是 表达提交
@@ -73,9 +82,38 @@ def login(request):
         if username == '123'  and password =='123':
             # return HttpResponse('登陆成功')
             # 登陆成功，重定向到首页
-            return redirect('/base/')
+            ret = redirect('/base/')
+            ret.set_cookie('k1','v1')
+            return ret
+             
         else:
-            return HttpResponse('登陆失败')    
+            return HttpResponse('登陆失败') 
+
+
+# def login(request):
+#     method = request.method
+#     # 根据方法不同 确定是请求界面 还是 表达提交
+#     if method == 'GET':
+#         # print('================================request请求的方法')
+#         # print('请求方法', request.method)
+#         # print('请求的 GET参数的类字典对象',request.GET)
+#         # print('请求的 POST参数的类字典对象',request.POST)
+#         # print('请求体',request.body)
+#         # print('请求头',request.META)
+#         # print('========================================')
+#         return render(request,'login.html')
+#     elif method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         if username == '123'  and password =='123':
+#             # return HttpResponse('登陆成功')
+#             # 登陆成功，重定向到首页
+#             ret = redirect('/base/')
+#             return ret
+#         else:
+#             return HttpResponse('登陆失败')    
+
+
 
 # 获取app的验证码
 def yanzhengma_app():
@@ -110,7 +148,8 @@ def yanzhengma_h5():
 
     return list2
 
-# 获取验证码
+# 获取验证码 界面
+@wrapper
 def app1base(request):
     method = request.method
     count = request.POST.get('count')
