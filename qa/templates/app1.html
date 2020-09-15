@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -96,8 +97,53 @@
         </div>
 
         <div>
-            <button>刷新</button>
+            <button id="b11" type="button">刷新</button>
+            <select name="" id="sele1">
+                <option value="">3</option>
+                <option value="">5</option>
+                <option value="">7</option>
+            </select>
+            <table class="table table-striped c1">
+                <h3><span class="label label-success  c_an">h5</span></h3>
+                <!-- <h3><span class="label label-default"></span></h3> -->
+                <tr>
+                    <th>手机号</th>
+                    <th>验证码</th>
+                    <th>获取时间</th>
+                </tr>
+
+                {% for i in list3 %}
+                <tr>
+                    <td>{{ i.encrypt_mobile|slice:"4:" }}</td>
+                    <td>{{ i.code }}</td>
+                    <td>{{ i.update_date|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+                {% endfor %}
+        </table>
         </div>
+
+        <script src="/static/jquery-3.5.1.js"></script>
+        <script>
+            $("#b11").on("click",function(){
+                $.ajax({
+                    url:"ajax_h5/",
+                    type:"POST",
+                    // contentType:"application/json",
+                    data:{"sele1":$("#sele1 option:selected",).text(),"csrfmiddlewaretoken": $("[name = 'csrfmiddlewaretoken']").val()},
+                    // processData: false ,    // 不处理数据
+                    // contentType: false,    // 不设置内容类型
+                    
+                    success:function(data){
+                        // list3 = data;
+                        // var list3 = []
+                        console.log(data.val)
+                        console.log(typeof(data))
+
+                    }
+                })
+            })
+        </script>
+
     </div>
 </body>
 

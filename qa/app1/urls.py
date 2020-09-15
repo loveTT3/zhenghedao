@@ -7,5 +7,5 @@ from app1 import views as app1_views, urls as app1_app1
 urlpatterns = [
     url(r'^$', app1_views.app1base),
     # url(r'^base/', app1_views.base),
-
+    url(r'^ajax_h5/', app1_views.ajax_h5),
 ]

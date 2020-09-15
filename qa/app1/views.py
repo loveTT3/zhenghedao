@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect
+from django.http import JsonResponse
 import pymysql
 # Create your views here.
 
@@ -129,22 +130,29 @@ def yanzhengma_app():
     return list1
 
 # 获取h5的验证码
-def yanzhengma_h5():
+def yanzhengma_h5(num):
     conn = shujuku_h5() #链接数据库
     cur2 = conn.cursor(cursor = pymysql.cursors.DictCursor) # 将查询出来的结果制作成字典的形式返回
-    cur2.execute('SELECT * FROM tb_wmp_auth_mobile ORDER BY update_date DESC LIMIT 5;')
+    num = num
+    if num == 7:
+        cur2.execute('SELECT * FROM tb_wmp_auth_mobile ORDER BY update_date DESC LIMIT 7;')
+    elif num == 5:
+        cur2.execute('SELECT * FROM tb_wmp_auth_mobile ORDER BY update_date DESC LIMIT 5;')
+    else:
+        cur2.execute('SELECT * FROM tb_wmp_auth_mobile ORDER BY update_date DESC LIMIT 3;')
     all = cur2.fetchall()   # 获取剩余结果的所有数据
     list2 = []
     for j in all :
         # print('剩余结果的全部',j)
         list2.append(j) 
 
-    # print(list2[0])
+
     # print(len(list2))
     for i in range(len(list2)):
-        list2[i]['encrypt_mobile'] = decrypt_str(list2[i]['encrypt_mobile'])
+        list2[i]['encrypt_mobile'] = decrypt_str(list2[i]['encrypt_mobile'])  # 解密
         # print(list2[i].encrypt_mobile)     
     # print(list1[0]['captcha'])
+    # print(list2)
 
     return list2
 
@@ -156,9 +164,25 @@ def app1base(request):
     print(count)
     if method == 'GET':
         list1 = yanzhengma_app()
-        list2 = yanzhengma_h5()
+        list2 = yanzhengma_h5(5)
         return render(request,'app1.html',locals())
     elif method == 'POST':
         list1 = yanzhengma_app()
-        list2 = yanzhengma_h5()
+        list2 = yanzhengma_h5(5)
         return render(request,'app1.html',locals())
+
+import json
+# ajax局部刷新
+def ajax_h5(request):
+    num = request.POST.get("sele1")
+    print(num)
+    list3 = yanzhengma_h5(int(num))
+    print(type(list3))
+    print(list3)
+    list4 = []
+    for i in range(len(list3)):
+        yyy = list3[i]['encrypt_mobile']
+        print(yyy)
+        list4.append(yyy)
+    print(list4)
+    return JsonResponse(list4,safe=False)

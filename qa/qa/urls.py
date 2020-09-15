@@ -24,8 +24,9 @@ urlpatterns = [
     url(r'^login/', app1_views.login,name='login'),
     url(r'^base/', app1_views.base),
     # url(r'^login/', app1_views.login),
+    
 
-    # 路由分发到app01和app02的urls文件中
+    # 路由分发到app01和app02的urls文件中 
     url(r'^app1/',include('app1.urls')),
     # url(r'^app02/',include('app02.urls')),
 ]
