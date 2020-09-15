@@ -110,10 +110,11 @@
                     <th>手机号</th>
                     <th>验证码</th>
                     <th>获取时间</th>
+                    <th>{{ list3 }}</th>
                 </tr>
-
                 {% for i in list3 %}
                 <tr>
+                    <td>{{ i }}</td>
                     <td>{{ i.encrypt_mobile|slice:"4:" }}</td>
                     <td>{{ i.code }}</td>
                     <td>{{ i.update_date|date:"Y-m-d H:i:s" }}</td>
@@ -124,6 +125,7 @@
 
         <script src="/static/jquery-3.5.1.js"></script>
         <script>
+            var list3 = []
             $("#b11").on("click",function(){
                 $.ajax({
                     url:"ajax_h5/",
@@ -131,19 +133,16 @@
                     // contentType:"application/json",
                     data:{"sele1":$("#sele1 option:selected",).text(),"csrfmiddlewaretoken": $("[name = 'csrfmiddlewaretoken']").val()},
                     // processData: false ,    // 不处理数据
-                    // contentType: false,    // 不设置内容类型
-                    
+                    // contentType: false,    // 不设置内容类型                  
                     success:function(data){
-                        // list3 = data;
-                        // var list3 = []
-                        console.log(data.val)
+                        list3 = data;
+                        console.log(data)
                         console.log(typeof(data))
 
                     }
                 })
             })
         </script>
-
     </div>
 </body>
 

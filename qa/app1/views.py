@@ -145,8 +145,6 @@ def yanzhengma_h5(num):
     for j in all :
         # print('剩余结果的全部',j)
         list2.append(j) 
-
-
     # print(len(list2))
     for i in range(len(list2)):
         list2[i]['encrypt_mobile'] = decrypt_str(list2[i]['encrypt_mobile'])  # 解密
@@ -182,7 +180,8 @@ def ajax_h5(request):
     list4 = []
     for i in range(len(list3)):
         yyy = list3[i]['encrypt_mobile']
-        print(yyy)
+        yyy = bytes.decode(yyy)
+        print(type(yyy))
         list4.append(yyy)
     print(list4)
     return JsonResponse(list4,safe=False)
