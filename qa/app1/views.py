@@ -1,5 +1,6 @@
 from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
+from django import forms
 import pymysql
 # Create your views here.
 
@@ -65,7 +66,38 @@ def decrypt_str(data):
     return method.decrypt(k)
 
 
+class RegForm(forms.Form):
+    # 字段名为前端标签的name
+    name = forms.CharField(  
+        min_length=2, 
+        max_length=11,
+        required=True, # 必填，默认true
+        strip=True, #是否移除输入左右的空白
+        label = '用户名',  
+        initial='请输入你的名字',  # 输入框默认值
+        help_text='3-11位',
+        error_messages={
+            "required":"不能为空",
+            "invalid":"格式错误",
+            "min_length":"用户名最短2位"
+        },
+    )
+    # 密码 
+    pwd = forms.CharField(
+        min_length = 4,
+        label="密码",
+        # 密码字段默认在前端输入数据错误的时候，点击提交之后，默认是不保存的原来数据，
+        # 但是可以通过这个render_value=True让这个字段在前端保留用户输入的数据
+        widget=forms.PasswordInput(render_value=True),
+        error_messages={
+            "required":"不能为空",
+            "invalid":"格式错误",
+            "min_length":"密码最短4位"
+        },
+    )
+
 def login(request):
+    form_obj = RegForm()
     method = request.method
     # 根据方法不同 确定是请求界面 还是 表达提交
     if method == 'GET':
@@ -76,7 +108,7 @@ def login(request):
         # print('请求体',request.body)
         # print('请求头',request.META)
         # print('========================================')
-        return render(request,'login.html')
+        return render(request,'login.html',{"form_obj": form_obj})
     elif method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

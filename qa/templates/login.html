@@ -25,11 +25,29 @@
 <body>
     <div class="c1">
         
-            <form class="" method="POST" action="">
-                姓名<input type="text" name="username" id=""><br>
+            <form class="" method="POST" action="" novalidate autocomplete="off">
+                <!-- 姓名<input type="text" name="username" id=""><br>
                 密码<input type="password" name="password" id=""><br>
-                <input type="submit" name="" id="">
-                
+                <input type="submit" name="" id=""> -->
+                <div>
+                    <span style="color: red;">*</span>
+                        <label for="{{ form_obj.name.id_for_label }}">{{ form_obj.name.label }}</label>
+                        {{ form_obj.name }}  
+                        {{ form_obj.name.help_text }}
+                    <span style="color: red;">{{ form_obj.name.errors.0 }}</span>
+                    <!-- errors是这个字段所有的错误，我就用其中一个错误提示就可以了，再错了再提示，并且不是给你生成ul标签了，单纯的是错误文本 -->
+                   
+                </div>
+                <div>
+                    <span style="color: red;">*</span>
+                    <label for="{{ form_obj.pwd.id_for_label }}">{{ form_obj.pwd.label }}</label>
+                    {{ form_obj.pwd }} {{ form_obj.pwd.errors.0 }}
+                    <!-- {{ form_obj.errors }}  -->
+                   <!-- 这是全局的所有错误，找对应字段的错误，就要form_obj.字段名 -->
+                </div>
+                <div>
+                    <input type="submit" class="btn btn-success" value="注册">
+                </div>
             </form>
     </div>
 </body>
