@@ -30,7 +30,7 @@
                 密码<input type="password" name="password" id=""><br>
                 <input type="submit" name="" id=""> -->
                 <div>
-                    <span style="color: red;">*</span>
+                    <!-- <span style="color: red;">*</span> -->
                         <label for="{{ form_obj.name.id_for_label }}">{{ form_obj.name.label }}</label>
                         {{ form_obj.name }}  
                         {{ form_obj.name.help_text }}
@@ -39,7 +39,7 @@
                    
                 </div>
                 <div>
-                    <span style="color: red;">*</span>
+                    <!-- <span style="color: red;">*</span> -->
                     <label for="{{ form_obj.pwd.id_for_label }}">{{ form_obj.pwd.label }}</label>
                     {{ form_obj.pwd }} {{ form_obj.pwd.errors.0 }}
                     <!-- {{ form_obj.errors }}  -->
